@@ -112,6 +112,9 @@ def build_dashboard():
         <div class="stat-chip"><div class="n tabular" id="stat-opportunities">–</div><div class="l">Oportunidades</div></div>
         <div class="stat-chip"><div class="n tabular" id="stat-topimpact">–</div><div class="l">Alto impacto</div></div>
       </div>
+      <div class="section-title">Resumen de hoy</div>
+      <div id="resumen-cards"></div>
+      <p style="font-size:11.5px;color:var(--ink-soft);line-height:1.4;margin:6px 4px 0">Los titulares se muestran en su idioma original (no se traducen) — la frase en español de arriba de cada uno resume por qué se eligió, extraída de los datos, no del contenido completo del artículo.</p>
       <div class="section-title">Lo más impactante</div>
       <div class="list" id="impact-list"></div>
       <div class="disclaimer" style="margin-top:18px"><span class="ic">ⓘ</span><div><b>Curado automáticamente.</b> El "impacto" se calcula por palabras clave, cuántas fuentes cubren la misma noticia y (cuando aplica) el interés real en Hacker News — no es un juicio editorial humano.</div></div>

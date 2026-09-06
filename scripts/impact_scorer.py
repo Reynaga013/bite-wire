@@ -146,6 +146,43 @@ def classify_topic(item):
     return "producto"
 
 
+# ---------- Extracción de montos en dinero (para "la cifra más grande de hoy") ----------
+_MONEY_RE = re.compile(
+    r"\$\s?([\d][\d,.]*)\s*(billion|bn|million|m\b|thousand|k\b)?", re.IGNORECASE
+)
+_UNIT_MULT = {"billion": 1e9, "bn": 1e9, "million": 1e6, "m": 1e6, "thousand": 1e3, "k": 1e3}
+
+
+def extract_max_money(text):
+    """Devuelve (valor_en_usd, fragmento_original) del monto más grande
+    mencionado en el texto, o (0, None) si no encuentra ninguno. Sirve para
+    detectar "la cifra más grande del día" sin depender de un LLM."""
+    best_val, best_frag = 0.0, None
+    for m in _MONEY_RE.finditer(text or ""):
+        num_str, unit = m.group(1), (m.group(2) or "").lower()
+        try:
+            num = float(num_str.replace(",", ""))
+        except ValueError:
+            continue
+        val = num * _UNIT_MULT.get(unit, 1)
+        if val > best_val:
+            best_val, best_frag = val, m.group(0).strip()
+    return best_val, best_frag
+
+
+def fmt_money_es(value):
+    """Formatea un monto en USD al estilo hispanohablante habitual
+    ('mil millones' en vez de 'billion', que en español significa otra cosa)."""
+    if value >= 1e9:
+        n = value / 1e9
+        return f"${n:.1f} mil millones".replace(".0 ", " ")
+    if value >= 1e6:
+        return f"${value/1e6:.0f} millones"
+    if value >= 1e3:
+        return f"${value/1e3:.0f} mil"
+    return f"${value:.0f}"
+
+
 def score_all(items):
     for it in items:
         impact, impact_hits = score_impact(it)

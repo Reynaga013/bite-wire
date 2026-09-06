@@ -79,6 +79,83 @@ def _clean_item_for_output(it):
     }
 
 
+RESUMEN_MIN_IMPACT_FOR_NUEVO = 2.0  # "lo más nuevo" ignora ruido puro sin nada de impacto
+
+
+def build_resumen(items):
+    """Arma el resumen ejecutivo de 4 tarjetas para la pestaña Hoy: la idea es
+    que el usuario NO tenga que leer las 300+ noticias — con esto le alcanza.
+    Todo se arma a partir de datos ya extraídos (impacto, fecha, montos en
+    dinero, tema) con frases de plantilla en español; no traduce el titular
+    original (eso requeriría un LLM en cada corrida, que se decidió no usar
+    por costo) — el titular se muestra tal cual, en su idioma original, como
+    referencia/fuente de la afirmación."""
+    used_links = set()
+
+    def pick(candidates):
+        for it in candidates:
+            if it["link"] not in used_links:
+                used_links.add(it["link"])
+                return it
+        return None
+
+    def entry(it, kicker, extra=None):
+        if not it:
+            return None
+        out = _clean_item_for_output(it)
+        out["kicker"] = kicker
+        out["extra"] = extra
+        return out
+
+    by_impact = sorted(items, key=lambda it: it["impact_score"], reverse=True)
+    by_date = sorted(
+        [it for it in items if it.get("published") and it["impact_score"] >= RESUMEN_MIN_IMPACT_FOR_NUEVO],
+        key=lambda it: it["published"],
+        reverse=True,
+    )
+
+    money_candidates = []
+    for it in items:
+        val, frag = scorer_mod.extract_max_money(f"{it['title']} {it.get('summary','')}")
+        if val > 0:
+            money_candidates.append((val, it))
+    money_candidates.sort(key=lambda x: x[0], reverse=True)
+
+    regulacion_sorted = sorted(
+        [it for it in items if it["topic"] == "regulacion"], key=lambda it: it["impact_score"], reverse=True
+    )
+    investigacion_sorted = sorted(
+        [it for it in items if it["topic"] == "investigacion"], key=lambda it: it["impact_score"], reverse=True
+    )
+    opp_sorted = sorted(
+        [it for it in items if it["opportunity_score"] >= OPPORTUNITY_MIN_SCORE],
+        key=lambda it: it["opportunity_score"],
+        reverse=True,
+    )
+
+    importante = pick(by_impact)
+
+    nuevo = pick(by_date) or pick(by_impact)
+
+    mas_caro = None
+    caro_amount = None
+    for val, it in money_candidates:
+        if it["link"] not in used_links:
+            mas_caro = it
+            caro_amount = scorer_mod.fmt_money_es(val)
+            used_links.add(it["link"])
+            break
+
+    deberias_saber = pick(regulacion_sorted) or pick(investigacion_sorted) or pick(opp_sorted) or pick(by_impact)
+
+    return {
+        "importante": entry(importante, "Lo más importante"),
+        "nuevo": entry(nuevo, "Lo más nuevo"),
+        "mas_caro": entry(mas_caro, "La cifra más grande de hoy", extra=caro_amount),
+        "deberias_saber": entry(deberias_saber, "Algo que deberías saber"),
+    }
+
+
 def run_pipeline():
     print("== Recolectando noticias de IA ==")
     raw_items = news_mod.collect_all()
@@ -114,6 +191,8 @@ def run_pipeline():
     for it in top_impact[:6]:
         alerts.append(f"{it['title']} ({', '.join(it.get('_hit_sources', [])[:2])})")
 
+    resumen = build_resumen(items)
+
     snapshot = {
         "generated_at": _now_iso(),
         "stats": {
@@ -122,6 +201,7 @@ def run_pipeline():
             "opportunities": len(opportunities),
             "topics": {t: len(v) for t, v in by_topic.items()},
         },
+        "resumen": resumen,
         "alerts": alerts,
         "top_impact": [_clean_item_for_output(it) for it in top_impact],
         "opportunities": [_clean_item_for_output(it) for it in opportunities],
@@ -150,6 +230,15 @@ def run_pipeline():
     print("\nTop oportunidades:")
     for it in opportunities[:6]:
         print(f"  [{it['opportunity_score']}] {it['title'][:85]}")
+
+    print("\nResumen de hoy:")
+    for key, label in [("importante", "Lo más importante"), ("nuevo", "Lo más nuevo"), ("mas_caro", "La cifra más grande"), ("deberias_saber", "Algo que deberías saber")]:
+        r = resumen.get(key)
+        if r:
+            extra = f" [{r['extra']}]" if r.get("extra") else ""
+            print(f"  {label}{extra}: {r['title'][:80]}")
+        else:
+            print(f"  {label}: (sin datos)")
 
     return snapshot
 

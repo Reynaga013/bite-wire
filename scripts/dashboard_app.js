@@ -80,6 +80,41 @@
     el.innerHTML = items.map(function (it) { return newsRow(it, opts); }).join("");
   }
 
+  function resumenCard(entry) {
+    if (!entry) return "";
+    var extraBadge = entry.extra
+      ? '<span class="badge gold" style="margin-left:6px;vertical-align:middle">' + esc(entry.extra) + "</span>"
+      : "";
+    return (
+      '<a class="card" href="' + esc(entry.link) + '" target="_blank" rel="noopener noreferrer" ' +
+        'style="display:block;margin-bottom:10px;text-decoration:none;color:inherit">' +
+        '<div style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent)">' +
+          esc(entry.kicker || "") + extraBadge +
+        "</div>" +
+        '<div class="title" style="font-size:15px;font-weight:600;line-height:1.35;color:var(--ink);margin-top:5px">' +
+          esc(entry.title) +
+        "</div>" +
+        '<div class="meta" style="font-size:12px;color:var(--ink-soft);margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">' +
+          "<span>" + esc(sourcesLine(entry)) + "</span>" +
+          (entry.published ? "<span>· " + timeAgo(entry.published) + "</span>" : "") +
+        "</div>" +
+      "</a>"
+    );
+  }
+
+  function renderResumen() {
+    var el = document.getElementById("resumen-cards");
+    if (!el) return;
+    var r = D.resumen || {};
+    var order = ["importante", "nuevo", "mas_caro", "deberias_saber"];
+    var html = order.map(function (k) { return resumenCard(r[k]); }).join("");
+    if (!html) {
+      el.innerHTML = '<div class="empty-state">Sin resumen disponible en este ciclo.</div>';
+      return;
+    }
+    el.innerHTML = html;
+  }
+
   function renderHoy() {
     var stats = D.stats || {};
     var topImpact = D.top_impact || [];
@@ -154,6 +189,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
+    renderResumen();
     renderHoy();
     renderNoticias();
     renderOportunidades();
