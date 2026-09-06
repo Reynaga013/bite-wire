@@ -57,9 +57,11 @@
     if (eng && (eng.points || eng.comments)) {
       engLine = '<span>▲ ' + (eng.points || 0) + " · " + (eng.comments || 0) + " coment.</span>";
     }
+    var summaryHtml = item.summary ? '<div class="summary">' + esc(item.summary) + "</div>" : "";
     return (
       '<a class="row" href="' + esc(item.link) + '" target="_blank" rel="noopener noreferrer" style="display:block;padding:12px 14px">' +
         '<div class="title">' + esc(item.title) + "</div>" +
+        summaryHtml +
         '<div class="meta">' +
           '<span>' + esc(sourcesLine(item)) + '</span>' +
           (item.published ? '<span>· ' + timeAgo(item.published) + '</span>' : '') +
@@ -94,6 +96,7 @@
         '<div class="title" style="font-size:15px;font-weight:600;line-height:1.35;color:var(--ink);margin-top:5px">' +
           esc(entry.title) +
         "</div>" +
+        (entry.summary ? '<div class="card-summary">' + esc(entry.summary) + "</div>" : "") +
         '<div class="meta" style="font-size:12px;color:var(--ink-soft);margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">' +
           "<span>" + esc(sourcesLine(entry)) + "</span>" +
           (entry.published ? "<span>· " + timeAgo(entry.published) + "</span>" : "") +

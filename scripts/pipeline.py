@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 
 import news_aggregator as news_mod
 import impact_scorer as scorer_mod
+import translator as translator_mod
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -116,7 +117,11 @@ def build_resumen(items):
 
     money_candidates = []
     for it in items:
-        val, frag = scorer_mod.extract_max_money(f"{it['title']} {it.get('summary','')}")
+        # usa el texto en inglés (antes de traducir) porque el regex de montos
+        # busca patrones tipo "$550 million" -- una vez traducido al español
+        # el formato cambia ("550 millones de dólares") y ya no coincide.
+        text_en = f"{it.get('title_en', it['title'])} {it.get('summary_en', it.get('summary',''))}"
+        val, frag = scorer_mod.extract_max_money(text_en)
         if val > 0:
             money_candidates.append((val, it))
     money_candidates.sort(key=lambda x: x[0], reverse=True)
@@ -170,6 +175,10 @@ def run_pipeline():
 
     print("== Puntuando impacto y oportunidades ==")
     items = scorer_mod.score_all(items)
+
+    print("== Traduciendo título y resumen al español (gratis, con cache) ==")
+    items, tr_new, tr_failed, tr_cached = translator_mod.translate_items(items)
+    print(f"  {tr_new} traducidos nuevos, {tr_cached} desde cache, {tr_failed} fallidos (se quedan en inglés)")
 
     # ordena por fecha de publicación desc cuando existe, si no al final
     def _pub_key(it):

@@ -29,6 +29,12 @@ jobs:
           git config user.name "Bite & Wire bot"
           git config user.email "actions@github.com"
           git add docs/
+          # tambien versiona la cache de traducciones (data/translation_cache.json,
+          # el resto de data/ sigue ignorado): sin esto, cada corrida en un runner
+          # nuevo tendria que retraducir TODO desde cero cada 4 horas para siempre.
+          if [ -f data/translation_cache.json ]; then
+            git add -f data/translation_cache.json
+          fi
           if git diff --cached --quiet; then
             echo "Sin cambios que publicar en esta corrida."
           else
