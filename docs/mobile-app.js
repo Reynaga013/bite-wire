@@ -59,30 +59,48 @@
   }
 
   function start() {
-    if (native || app === 'neto' || reduced.matches || !brands[app]) return;
+    const root = document.documentElement;
+    const unmask = () => { root.classList.remove('app-launch-pending'); delete root.dataset.launchPending; };
+    if (native || app === 'neto' || reduced.matches || !brands[app]) { unmask(); return; }
+    if (root.dataset.launchPending === 'expired') { unmask(); return; }
     // Navegación multipágina: no repetir la presentación en cada sección.
     try {
       const key = 'app-launch-' + app;
       const previous = Number(sessionStorage.getItem(key));
-      if (previous && Date.now()-previous < 20000) return;
+      if (previous && Date.now()-previous < 20000) { unmask(); return; }
       sessionStorage.setItem(key, String(Date.now()));
     } catch { /* También funciona sin almacenamiento. */ }
     const [name,accent,bg] = brands[app];
     const appearance = getComputedStyle(document.body);
     const pageBackground = appearance.getPropertyValue('--bg').trim() || (appearance.backgroundColor !== 'rgba(0, 0, 0, 0)' ? appearance.backgroundColor : bg);
     const splash = document.createElement('div');
-    splash.className = 'app-launch launch-' + app;
+    splash.className = 'app-launch launch-' + app + ' is-preparing';
     splash.setAttribute('aria-hidden','true');
     splash.style.setProperty('--launch-bg',pageBackground);
-    splash.style.setProperty('--launch-ink',appearance.color);
+    // Usar el token de tinta; Safari puede devolver negro durante la primera pintura.
+    const ink = app === 'pulso' ? '#f3f7f5' : appearance.getPropertyValue('--ink').trim() || appearance.getPropertyValue('--text-primary').trim() || appearance.color;
+    splash.style.setProperty('--launch-ink',ink);
     splash.style.setProperty('--launch-accent',accent);
     // Solo nombres y SVG estáticos de esta tabla, nunca contenido de usuarios.
     splash.innerHTML = `<div class="app-launch-symbol">${symbolMarkup()}</div><div class="app-launch-name">${name}<span>.</span></div>`;
     document.body.appendChild(splash);
-    const remove = () => { splash.classList.add('is-leaving'); setTimeout(() => splash.remove(),230); };
-    setTimeout(remove,app === 'panel' ? 850 : 1550);
-    setTimeout(() => splash.remove(),2100); // La red o un fallo de la app nunca retienen la portada.
-    reduced.addEventListener('change', e => { if (e.matches) splash.remove(); }, { once:true });
+    let removed = false;
+    const remove = () => {
+      if (removed) return;
+      removed = true;
+      unmask();
+      splash.classList.add('is-leaving');
+      setTimeout(() => splash.remove(),230);
+    };
+    // Dos frames: pintar la portada antes de contar su duración. El trabajo de
+    // inicio de la app no consume el tiempo de la animación en un móvil lento.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (removed) return;
+      splash.classList.remove('is-preparing');
+      setTimeout(remove,app === 'panel' ? 850 : app === 'radar' ? 2450 : 1650);
+    }));
+    setTimeout(remove,5000);
+    reduced.addEventListener('change', e => { if (e.matches) remove(); }, { once:true });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();

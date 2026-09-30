@@ -10,6 +10,8 @@ html, body { touch-action: pan-x pan-y; }
   transition: opacity .22s ease, visibility .22s; contain: layout paint;
 }
 .app-launch.is-leaving { opacity: 0; visibility: hidden; }
+.app-launch.is-preparing .app-launch-symbol,.app-launch.is-preparing .app-launch-symbol *,.app-launch.is-preparing .app-launch-name { animation-play-state: paused !important; }
+.app-launch.is-preparing .app-launch-symbol::after { animation-play-state: paused !important; }
 .app-launch-symbol { position: relative; width: 112px; height: 112px; color: var(--launch-accent); animation: launch-arrive .65s cubic-bezier(.2,.8,.2,1) both; }
 .app-launch-symbol svg { width: 100%; height: 100%; overflow: visible; }
 .app-launch-symbol path, .app-launch-symbol polyline { stroke-dasharray: 300; stroke-dashoffset: 300; animation: launch-draw .75s ease forwards; }
@@ -39,7 +41,9 @@ html, body { touch-action: pan-x pan-y; }
 .launch-bite .launch-pin { animation: launch-pin .35s calc(.2s + var(--pin)*.045s) both; }
 .launch-bite .launch-core { animation: launch-core 1.2s .15s both; }
 .launch-pulso .app-launch-symbol { animation: launch-brand-arrive .7s both, launch-pulse-glow 1.35s .15s both !important; }
-.launch-radar .launch-beam { transform-origin: 256px 256px; animation: launch-radar-beam 1.35s cubic-bezier(.3,.1,.2,1) both !important; }
+.launch-pulso .app-launch-name { color:#f3f7f5; }
+.launch-pulso .logo-art { outline:1px solid #6de5b738; box-shadow:0 0 0 5px #6de5b708,0 22px 60px #0003; }
+.launch-radar .launch-beam { transform-origin: 256px 256px; animation: launch-radar-beam 2s cubic-bezier(.3,.1,.2,1) both !important; }
 .launch-radar-ring { transform-origin: 256px 256px; animation: launch-radar-ring .65s calc(var(--ring)*.18s) both; }
 .launch-calendario .logo-art { animation: launch-calendar-open 1.25s cubic-bezier(.2,.8,.2,1) both; }
 .launch-calendario .launch-day { transform-box: fill-box; transform-origin: center; animation: launch-day .75s .45s both; }
