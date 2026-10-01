@@ -105,3 +105,76 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded',start,{once:true});
   else start();
 })();
+
+/* UI EXPERIENCE */
+/* Feedback visual: sin peticiones de red, almacenamiento ni cambios en los datos. */
+(() => {
+ 'use strict';
+ const script=document.currentScript,app=script?.dataset.app;
+ if(!app)return;
+ const root=document.documentElement;root.dataset.uiApp=app;
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+ const layouts={
+  pulso:{surface:'.lead,.signal-note,.watchlist,.history-card,.settings-panel,.idea-card,.story,.login',lift:'.signal-note,.story',row:'.stock,.mover,.search-result',tabs:'.tabs,.range-options,.news-switch,.news-languages,.ticker-filter',nav:'.mobile-tabs',sheet:'dialog,.modal'},
+  radar:{surface:'.featured,.topic-tile,.growth-detail,.install-panel',lift:'.topic-tile',row:'.story:not(.featured),.setting-row',tabs:'.quick-topics,.growth-filters,.language-choice',nav:'.bottom-nav,.desktop-rail',sheet:'dialog'},
+  panel:{surface:'.tarjeta,.caja-login',lift:'.fichas .tarjeta',row:'tbody tr',tabs:'.segmentado,.suite-nav',nav:'.suite-nav',sheet:'dialog'},
+  celaje:{surface:'.card,.detail-panel,.focus-panel,.agenda-preview,.appointment',lift:'.feature-bento .detail-panel,.card',row:'.service',tabs:'.slots,.tabs,.ios-tabs',nav:'.nav,.ios-app-nav',sheet:'dialog,.sheet'},
+  ayudaya:{surface:'.card,.stat,.how-card,.opportunity-window',lift:'.how-card',row:'tbody tr,.result-item',tabs:'.tabs',nav:'.workspace-nav',sheet:'dialog'},
+  gasoya:{surface:'.card,.panel',lift:'.card',row:'',tabs:'.segmented,.chip-row',nav:'.tabbar-inner',sheet:'dialog'},
+  luzya:{surface:'.hero,.summary-card,.glass',lift:'.summary-card',row:'',tabs:'.segmented',nav:'.tabbar-inner',sheet:'dialog'},
+  calendario:{surface:'.cal-card,.day-card,.auth-card',lift:'',row:'.client-row',tabs:'.month-nav',nav:'',sheet:'.sheet'},
+  condufy:{surface:'.daily,.review-card,.shop-item,.track-card,.confirm-card,.login-head',lift:'.review-card,.track-card',row:'.friend-row,.leaderboard-row,.node',tabs:'.auth-tabs',nav:'.nav',sheet:'.sheet,.modal'},
+  whale:{surface:'.hero,.list,.stat-chip',lift:'.stat-chip',row:'.news-row,.list-row,.radar-row',tabs:'.segmented,.chip-row',nav:'#tabbar',sheet:'.sheet'},
+  bite:{surface:'.hero,.list,.stat-chip',lift:'.stat-chip',row:'.news-row,.list-row,.impact-row',tabs:'.chip-row',nav:'#tabbar',sheet:'.sheet'},
+  neto:{surface:'.mc-card,.mc-balance-card,.mc-budget-card,.mc-fixed-card,.mc-detail-chart-card,.mc-auth-card',lift:'.mc-budget-card,.mc-fixed-card',row:'.mc-tx-row,.mc-analysis-row',tabs:'.mc-segmented,.mc-filter-bar,.mc-detail-range-track',nav:'.mc-tabbar',sheet:'.mc-modal'}
+ };
+ const layout=layouts[app];if(!layout)return;
+ const marked=new WeakSet();let reveal;
+ if('IntersectionObserver' in window&&!reduced.matches)reveal=new IntersectionObserver(entries=>{
+  let index=0;
+  for(const entry of entries)if(entry.isIntersecting){
+   const el=entry.target;reveal.unobserve(el);
+   // Las tarjetas que ya tienen una entrada propia la conservan.
+   if(getComputedStyle(el).animationName==='none'&&!el.hasAttribute('data-reveal')){
+    el.style.setProperty('--ui-delay',Math.min(index++,3)*45+'ms');el.classList.add('ui-arrive');
+    el.addEventListener('animationend',()=>{el.classList.remove('ui-arrive');el.style.removeProperty('--ui-delay')},{once:true});
+   }
+  }
+ },{threshold:.025});
+ function mark(container){
+  if(!(container instanceof Element))return;
+  for(const [kind,selector] of Object.entries(layout)){
+   if(!selector)continue;
+   const nodes=[...(container.matches(selector)?[container]:[]),...container.querySelectorAll(selector)];
+   for(const el of nodes){
+    const key=kind==='surface'?'surface':kind;el.classList.add('ui-'+key);
+    if(kind==='surface'&&!marked.has(el)){marked.add(el);reveal?.observe(el)}
+   }
+  }
+  if(app==='condufy')for(const el of [...(container.matches('.node.clickable,.daily,.review-card')?[container]:[]),...container.querySelectorAll('.node.clickable,.daily,.review-card')]){
+   if(el.matches('button,a,[role=button]'))continue;
+   el.setAttribute('role','button');el.tabIndex=0;el.setAttribute('aria-label',el.querySelector('.n-label,.t,.review-t')?.textContent||el.textContent.trim());
+   el.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();el.click()}});
+  }
+ }
+ function init(){
+  mark(document.body);
+  const pending=new Set();let frame=0;
+  new MutationObserver(records=>{
+   for(const record of records)for(const node of record.addedNodes)if(node instanceof Element)pending.add(node);
+   if(pending.size&&!frame)frame=requestAnimationFrame(()=>{frame=0;for(const node of pending)if(node.isConnected)mark(node);pending.clear()});
+  }).observe(document.body,{childList:true,subtree:true});
+  const pressed=new Set();
+  function release(){for(const el of pressed)el.classList.remove('ui-press');pressed.clear()}
+  document.addEventListener('pointerdown',event=>{
+   if(event.button!==0||reduced.matches)return;
+   const el=event.target.closest('button,a,summary,[role=button]');
+   if(!el||el.matches(':disabled')||el.closest('.app-launch,#splash'))return;
+   release();el.classList.add('ui-press');pressed.add(el);
+  },{passive:true});
+  document.addEventListener('pointerup',release,{passive:true});document.addEventListener('pointercancel',release,{passive:true});window.addEventListener('blur',release);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)release()});
+  reduced.addEventListener('change',event=>{if(event.matches){release();reveal?.disconnect();document.querySelectorAll('.ui-arrive').forEach(el=>el.classList.remove('ui-arrive'))}});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();

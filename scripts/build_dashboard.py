@@ -74,7 +74,7 @@ def build_dashboard():
     stats = data.get("stats", {})
 
     html_out = f"""<meta charset="utf-8">
-<style data-launch-style="20260930-3">html.app-launch-pending{{background:var(--bg,var(--bg-primary,var(--launch-boot-bg)))}}
+<style data-launch-style="20261001-ui1">html.app-launch-pending{{background:var(--bg,var(--bg-primary,var(--launch-boot-bg)))}}
 html.app-launch-pending::before{{content:"";position:fixed;inset:0;z-index:2147482999;pointer-events:none;background:var(--bg,var(--bg-primary,var(--launch-boot-bg)))}}
 html.app-launch-pending body>:not(.app-launch):not(#splash){{visibility:hidden!important}}
 html.app-launch-pending .app-launch,html.app-launch-pending #splash{{visibility:visible}}
@@ -120,8 +120,8 @@ html.app-launch-pending .app-launch,html.app-launch-pending #splash{{visibility:
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap">
-<link rel="stylesheet" href="mobile-app.css?v=20260930-3">
-<script src="mobile-app.js?v=20260930-3" data-app="bite" defer></script>
+<link rel="stylesheet" href="mobile-app.css?v=20261001-ui1">
+<script src="mobile-app.js?v=20261001-ui1" data-app="bite" defer></script>
 <style>
 {css}
 </style>

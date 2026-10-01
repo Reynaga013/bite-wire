@@ -86,3 +86,223 @@ html, body { touch-action: pan-x pan-y; }
   .app-launch { display: none; }
   .app-launch *, .launch-native-condufy #splash .logo, .launch-native-condufy #splash .name { animation: none !important; }
 }
+
+/* UI EXPERIENCE */
+/* Acabado compartido. Cada app conserva sus colores, densidad y navegación. */
+html[data-ui-app]{--ui-accent:var(--accent,var(--acento,#0a84ff));--ui-line:var(--line,var(--linea,var(--glass-border,#8883)));--ui-ease:cubic-bezier(.2,.8,.2,1);--ui-shadow:0 12px 28px -20px #0005}
+html[data-ui-app=pulso]{--ui-accent:var(--mint);--ui-line:var(--line)}
+html[data-ui-app=radar]{--ui-accent:var(--blue);--ui-line:var(--line)}
+html[data-ui-app=celaje],html[data-ui-app=ayudaya]{--ui-accent:var(--green);--ui-line:var(--line)}
+html[data-ui-app=condufy]{--ui-accent:var(--violet);--ui-line:var(--line)}
+html[data-ui-app=panel]{--ui-accent:var(--acento);--ui-line:var(--linea)}
+html[data-ui-app=calendario]{--ui-line:var(--glass-border)}
+html[data-ui-app=whale]{--ui-accent:var(--gold)}
+html[data-ui-app=neto]{--ui-accent:var(--accent,#9c9690)}
+
+html[data-ui-app] :is(button,a,summary,[role=button]){-webkit-tap-highlight-color:transparent}
+html[data-ui-app] :is(button,a,summary,[role=button]):focus-visible{outline:2px solid var(--ui-accent);outline-offset:4px}
+html[data-ui-app] :is(button,a,summary,[role=button]).ui-press{scale:.97}
+html[data-ui-app] :is(button,a,summary,[role=button]){transition:background-color .22s,border-color .22s,color .22s,box-shadow .22s,scale .18s var(--ui-ease)}
+html[data-ui-app] :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),select,textarea){transition:border-color .2s,box-shadow .2s;caret-color:var(--ui-accent)}
+html[data-ui-app] :is(input:not([type=range]):not([type=checkbox]):not([type=radio]),select,textarea):focus{outline:0;border-color:var(--ui-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--ui-accent) 16%,transparent)}
+html[data-ui-app] button[aria-busy=true]{animation:ui-working 1.1s ease-in-out infinite}
+html[data-ui-app] .ui-surface{transition:box-shadow .3s,border-color .3s,background-color .3s,translate .3s var(--ui-ease)}
+html[data-ui-app] .ui-arrive{animation:ui-arrive .42s var(--ui-ease) both;animation-delay:var(--ui-delay,0ms)}
+html[data-ui-app] :is(.ui-surface,.ui-row):focus-within{border-color:color-mix(in srgb,var(--ui-accent) 38%,var(--ui-line))}
+html[data-ui-app] :is(.ui-tabs,.ui-nav) :is(button,a){transition:background .24s,color .2s,scale .18s var(--ui-ease)}
+html[data-ui-app] :is(.ui-tabs,.ui-nav) :is(.active,.is-active,[aria-selected=true],[aria-pressed=true]) svg{scale:1.08;transition:scale .25s var(--ui-ease)}
+html[data-ui-app] :is(.ui-nav,.ui-tabs) svg{transition:scale .25s var(--ui-ease),color .2s}
+html[data-ui-app] .ui-sheet{animation:ui-sheet .3s var(--ui-ease) both}
+
+/* Pulso: números que se leen de un vistazo, superficies claras y navegación estable. */
+html[data-ui-app=pulso] .topbar{border-bottom-color:color-mix(in srgb,var(--mint) 18%,var(--line))}
+html[data-ui-app=pulso] .page-title{font-size:clamp(34px,4.5vw,48px);line-height:1.08;max-width:19ch}
+html[data-ui-app=pulso] .page-head{margin-bottom:30px}
+html[data-ui-app=pulso] .lead{border-radius:26px;background:linear-gradient(140deg,#244f48,#183d37 60%,#17272d);box-shadow:inset 0 1px #b7ffe414,0 16px 35px -28px #6de5b768}
+html[data-ui-app=pulso] :is(.signal-note,.watchlist,.history-card,.settings-panel,.idea-card){border-radius:24px;box-shadow:inset 0 1px #ffffff08,var(--ui-shadow)}
+html[data-ui-app=pulso] .stock{padding-block:21px}
+html[data-ui-app=pulso] .stock-symbol{font-size:17px;letter-spacing:-.03em}
+html[data-ui-app=pulso] .stock-name{font-size:12px;line-height:1.5}
+html[data-ui-app=pulso] :is(.stock-change,.stock-price,.lead-change,.history-value){font-variant-numeric:tabular-nums}
+html[data-ui-app=pulso] .stock-open{color:var(--mint);border-radius:14px}
+html[data-ui-app=pulso] .story{padding:19px 20px;border-radius:20px;background:linear-gradient(155deg,var(--surface-raised),var(--surface));box-shadow:inset 0 1px #ffffff08}
+html[data-ui-app=pulso] .story a{font-size:16px;line-height:1.45;letter-spacing:-.015em}
+html[data-ui-app=pulso] .story-meta{row-gap:8px}
+html[data-ui-app=pulso] .story-image{border-radius:14px;max-height:240px}
+html[data-ui-app=pulso] .idea-card{padding:23px}
+html[data-ui-app=pulso] .idea-head h3{font-size:23px;line-height:1.15}
+html[data-ui-app=pulso] .idea-metrics{flex-wrap:wrap}
+html[data-ui-app=pulso] .idea-card .story{box-shadow:none;margin-top:12px;background:var(--surface-soft)}
+html[data-ui-app=pulso] .section-head h2{font-size:23px;letter-spacing:-.04em}
+html[data-ui-app=pulso] :is(.tabs,.range-options,.news-switch){border-radius:16px}
+html[data-ui-app=pulso] :is(.primary,.secondary,.add-value){border-radius:14px;min-height:44px}
+html[data-ui-app=pulso] .chart-line{stroke-linecap:round;stroke-linejoin:round}
+html[data-ui-app=pulso] .chart-svg{filter:drop-shadow(0 6px 10px #6de5b710)}
+
+/* Radar sigue siendo una publicación: ritmo editorial, lectura y acciones más claras. */
+html[data-ui-app=radar] body{background-image:radial-gradient(ellipse at 100% 0,color-mix(in srgb,var(--blue) 6%,transparent),transparent 55%);background-attachment:fixed}
+html[data-ui-app=radar] .featured{border-radius:24px;padding:27px;background:linear-gradient(125deg,#284de0,#3357cd);box-shadow:0 18px 45px -28px #284de073}
+html[data-ui-app=radar] .featured .story-title{line-height:1.06}
+html[data-ui-app=radar] .story:not(.featured){padding:24px 0}
+html[data-ui-app=radar] .story-title{line-height:1.2;letter-spacing:-.025em}
+html[data-ui-app=radar] .story-actions{gap:9px}
+html[data-ui-app=radar] .story-action{min-height:38px;border-radius:12px;padding:8px 12px}
+html[data-ui-app=radar] :is(.topic-chip,.term-tag){min-height:38px;padding-inline:14px}
+html[data-ui-app=radar] .topic-tile{border-radius:21px;padding:20px;min-height:156px;box-shadow:inset 0 1px #ffffff08}
+html[data-ui-app=radar] .topic-tile strong{font-size:26px;max-width:12ch}
+html[data-ui-app=radar] .topic-tile .tile-arrow{transition:translate .25s var(--ui-ease)}
+html[data-ui-app=radar] .growth-detail{border-radius:20px;padding:20px;gap:22px;box-shadow:var(--ui-shadow)}
+html[data-ui-app=radar] .growth-detail p{line-height:1.65;font-size:13px}
+html[data-ui-app=radar] .growth-reason{font-size:14px}
+html[data-ui-app=radar] .growth-footer button{min-height:42px;border-radius:12px}
+html[data-ui-app=radar] .setting-row{min-height:64px}
+html[data-ui-app=radar] :is(.term-form input,.term-form button,.install-button,.language-choice button){border-radius:13px;min-height:44px}
+
+/* Panel: jerarquía en métricas y tablas, con foco visible en las acciones. */
+html[data-ui-app=panel] :is(.caja-login,.tarjeta){border-radius:25px;box-shadow:inset 0 1px #ffffff09,0 12px 32px -24px #0005}
+html[data-ui-app=panel] .barra{border-bottom-color:color-mix(in srgb,var(--acento) 18%,var(--linea))}
+html[data-ui-app=panel] .titulo-seccion{font-size:21px;letter-spacing:-.035em;line-height:1.25}
+html[data-ui-app=panel] .fichas .tarjeta{position:relative;overflow:hidden}
+html[data-ui-app=panel] .fichas .tarjeta::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(90deg,var(--acento),transparent);opacity:.55}
+html[data-ui-app=panel] .boton{border-radius:13px;min-height:42px}
+html[data-ui-app=panel] .icono-boton{min-width:42px;min-height:42px;border-radius:14px}
+html[data-ui-app=panel] .segmentado{padding:5px;border-radius:15px}
+html[data-ui-app=panel] .segmentado button{border-radius:10px;min-height:36px}
+html[data-ui-app=panel] :is(table th,table td){padding-block:15px}
+html[data-ui-app=panel] .suite-nav a{min-height:42px;display:inline-flex;align-items:center;border-radius:13px}
+
+/* Celaje: mismos materiales en la web comercial y en las pantallas de agenda. */
+html[data-ui-app=celaje] :is(.card,.detail-panel,.focus-panel,.agenda-preview,.appointment){box-shadow:inset 0 1px #ffffff24,0 14px 32px -25px #1b332a3b}
+html[data-ui-app=celaje] :is(.card,.detail-panel,.focus-panel){border-radius:26px}
+html[data-ui-app=celaje] .button{border-radius:14px;min-height:46px}
+html[data-ui-app=celaje] .slots button{min-height:44px;border-radius:12px}
+html[data-ui-app=celaje] .slots button.selected{box-shadow:0 4px 14px -7px color-mix(in srgb,var(--green) 65%,transparent)}
+html[data-ui-app=celaje] :is(.service,.appointment){transition:border-color .2s,background .2s}
+html[data-ui-app=celaje] :is(.nav,.ios-app-nav) a{border-radius:12px}
+html[data-ui-app=celaje] :is(.feature-bento,.section-heading) h2{letter-spacing:-.045em}
+html[data-ui-app=celaje] details>summary{min-height:44px;display:flex;align-items:center;gap:12px}
+html[data-ui-app=celaje] .bookings-list{display:grid;gap:12px}
+
+/* AyudaYa: la revisión de oportunidades gana aire sin ocultar las decisiones. */
+html[data-ui-app=ayudaya] :is(.card,.stat,.how-card,.opportunity-window){box-shadow:inset 0 1px #ffffff12,0 14px 38px -28px #0f5d4733}
+html[data-ui-app=ayudaya] :is(.card,.how-card){border-radius:26px}
+html[data-ui-app=ayudaya] .card h2{letter-spacing:-.04em;line-height:1.2}
+html[data-ui-app=ayudaya] .stats{gap:14px}
+html[data-ui-app=ayudaya] .stat{padding:20px 24px;border-radius:21px}
+html[data-ui-app=ayudaya] .stat strong{font-variant-numeric:tabular-nums;letter-spacing:-.05em}
+html[data-ui-app=ayudaya] :is(.button,button){border-radius:14px;min-height:44px}
+html[data-ui-app=ayudaya] .tabs{gap:5px;padding:5px;background:color-mix(in srgb,var(--surface) 88%,transparent);border:1px solid var(--line);border-radius:18px}
+html[data-ui-app=ayudaya] .tabs button{border-radius:12px}
+html[data-ui-app=ayudaya] :is(table td,table th){padding-block:17px}
+html[data-ui-app=ayudaya] dialog{border-radius:28px;box-shadow:0 25px 70px #0003}
+html[data-ui-app=ayudaya] dialog::backdrop{backdrop-filter:blur(5px)}
+
+/* GasoYa y LuzYa: precios protagonistas, acciones cómodas y tarjetas menos planas. */
+html[data-ui-app=gasoya] .card{border-radius:23px;padding:18px;margin-bottom:13px;box-shadow:inset 0 1px #ffffff09,var(--ui-shadow)}
+html[data-ui-app=gasoya] .card-brand{font-size:16px;line-height:1.3}
+html[data-ui-app=gasoya] .card-addr{line-height:1.6}
+html[data-ui-app=gasoya] .price{font-size:24px;letter-spacing:-.04em}
+html[data-ui-app=gasoya] .card-right{min-width:84px;gap:10px}
+html[data-ui-app=gasoya] .star-btn{width:40px;height:40px;font-size:18px;flex:none}
+html[data-ui-app=gasoya] .star-btn.on{background:color-mix(in srgb,var(--star) 13%,var(--glass-strong));border-color:color-mix(in srgb,var(--star) 35%,var(--glass-border))}
+html[data-ui-app=gasoya] .card-foot{margin-top:14px;padding-top:13px;gap:10px}
+html[data-ui-app=gasoya] :is(.btn,.segment){min-height:42px;border-radius:13px}
+html[data-ui-app=luzya] .hero{border-radius:28px;padding:28px 20px;box-shadow:inset 0 1px #ffffff12,0 18px 42px -30px color-mix(in srgb,var(--accent) 30%,transparent)}
+html[data-ui-app=luzya] .hero .price{font-size:52px;letter-spacing:-.06em;margin:12px 0 8px}
+html[data-ui-app=luzya] .summary-card{padding:15px 13px;border-radius:18px}
+html[data-ui-app=luzya] .summary-card .v{font-size:16px;letter-spacing:-.03em}
+html[data-ui-app=luzya] .summary-card .k{font-size:11px;line-height:1.4}
+html[data-ui-app=luzya] :is(.bar,.hist-bar){border-radius:5px 5px 2px 2px}
+html[data-ui-app=luzya] .chart-tooltip{border-radius:12px;padding:8px 12px;box-shadow:0 8px 22px #0003}
+html[data-ui-app=luzya] .segment{min-height:42px;border-radius:13px}
+html[data-ui-app=luzya] .section-label{margin-top:24px;letter-spacing:-.025em}
+html[data-ui-app=luzya] .glass{border-radius:24px}
+
+/* Calendario: días seleccionados y resumen con una respuesta clara al tocar. */
+html[data-ui-app=calendario] :is(.cal-card,.day-card,.auth-card){border-radius:27px;box-shadow:inset 0 1px #ffffff09,var(--ui-shadow)}
+html[data-ui-app=calendario] :is(.cal-day,.day-btn,.day){transition:background .2s,color .2s,scale .2s var(--ui-ease),box-shadow .2s}
+html[data-ui-app=calendario] :is(.month-nav-btn,.icon-btn){min-width:42px;min-height:42px;border-radius:14px}
+html[data-ui-app=calendario] :is(.btn-primary,.btn-secondary,.today-btn){min-height:44px;border-radius:14px}
+html[data-ui-app=calendario] .month-label{letter-spacing:-.04em}
+html[data-ui-app=calendario] .field-box{transition:border-color .2s,box-shadow .2s}
+html[data-ui-app=calendario] .field-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent)}
+html[data-ui-app=calendario] .sheet{border-radius:28px 28px 0 0}
+
+/* Condufy conserva su recorrido de aprendizaje y sus animaciones originales. */
+html[data-ui-app=condufy] :is(.lesson-card,.unit-card,.topic-card,.profile-card,.auth-card){border-radius:24px;box-shadow:inset 0 1px #ffffff09,var(--ui-shadow)}
+html[data-ui-app=condufy] :is(.btn-primary,.btn-ghost,.btn-social){border-radius:17px;min-height:46px}
+html[data-ui-app=condufy] .auth-tabs{padding:6px;border-radius:18px}
+html[data-ui-app=condufy] .auth-tab{border-radius:13px;min-height:42px}
+html[data-ui-app=condufy] .nav button{min-height:44px;min-width:52px;border-radius:14px;transition:background .2s,color .2s}
+html[data-ui-app=condufy] .nav button.active{background:var(--violet-tint)}
+html[data-ui-app=condufy] :is(.choice,.option,.quiz-option){transition:border-color .2s,background .2s,box-shadow .2s,scale .2s}
+html[data-ui-app=condufy] :is(.daily,.review-card,.shop-item,.track-card,.confirm-card){border-radius:24px;transition:box-shadow .25s,border-color .25s,translate .25s var(--ui-ease)}
+html[data-ui-app=condufy] .review-card{border:1px solid var(--line);padding:17px}
+html[data-ui-app=condufy] .input-wrap{border:1px solid var(--line);border-radius:15px;padding:12px 14px;min-height:50px;background:var(--panel);transition:border-color .2s,box-shadow .2s}
+html[data-ui-app=condufy] .input-wrap:focus-within{border-color:var(--violet);box-shadow:0 0 0 3px var(--violet-tint)}
+html[data-ui-app=condufy] .input-wrap input:focus{box-shadow:none}
+html[data-ui-app=condufy] .btn-enter{min-height:46px;padding-inline:42px;box-shadow:0 9px 20px -8px color-mix(in srgb,var(--violet) 50%,transparent)}
+html[data-ui-app=condufy] .node.clickable{border-radius:17px;padding-inline:7px}
+html[data-ui-app=condufy] .node.clickable .n-ic,html[data-ui-app=condufy] .node.clickable .chev{transition:translate .2s,scale .2s}
+
+/* Whale / Bite: cabecera de marca y listas legibles, sin convertir el feed en una landing. */
+html[data-ui-app=whale] .hero,html[data-ui-app=bite] .hero{border-radius:28px;border:1px solid var(--card-hairline);box-shadow:0 16px 36px -26px #0007}
+html[data-ui-app=whale] .hero .value,html[data-ui-app=bite] .hero .value{letter-spacing:-.055em;line-height:1.1}
+html[data-ui-app=whale] .list,html[data-ui-app=bite] .list{border-radius:23px;box-shadow:inset 0 1px #ffffff09,var(--ui-shadow)}
+html[data-ui-app=whale] .stat-chip,html[data-ui-app=bite] .stat-chip{padding:14px;border-radius:18px;border:1px solid var(--line)}
+html[data-ui-app=whale] .stat-chip .n,html[data-ui-app=bite] .stat-chip .n{letter-spacing:-.035em}
+html[data-ui-app=whale] .section-title,html[data-ui-app=bite] .section-title{letter-spacing:-.035em;margin-top:28px}
+html[data-ui-app=whale] .segmented,html[data-ui-app=bite] .segmented{padding:5px;border-radius:16px}
+html[data-ui-app=whale] .segment,html[data-ui-app=bite] .segment{border-radius:11px;min-height:38px}
+html[data-ui-app=whale] .sheet,html[data-ui-app=bite] .sheet{border-radius:29px 29px 0 0}
+html[data-ui-app=whale] .sheet-close,html[data-ui-app=bite] .sheet-close{min-width:42px;min-height:42px}
+html[data-ui-app=whale] .tab-btn,html[data-ui-app=bite] .tab-btn{border-radius:14px}
+
+/* Neto: detalle en sus tarjetas y formularios; se conserva el arranque propio. */
+html[data-ui-app=neto] :is(.mc-card,.mc-budget-card,.mc-fixed-card,.mc-detail-chart-card){border-radius:23px;box-shadow:inset 0 1px #ffffff09,0 10px 28px -23px #0005}
+html[data-ui-app=neto] .mc-balance-card{box-shadow:inset 0 1px #ffffff1c,0 18px 35px -29px #0007}
+html[data-ui-app=neto] :is(.mc-btn-primary,.mc-btn-ghost,.mc-btn-danger){border-radius:14px;min-height:44px}
+html[data-ui-app=neto] :is(.mc-budget-amounts,.mc-savings-value,.mc-networth-total){font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+html[data-ui-app=neto] .mc-segmented{border-radius:16px;padding:5px}
+html[data-ui-app=neto] .mc-modal{border-radius:28px}
+html[data-ui-app=neto] .mc-modal-header{padding-block:18px}
+html[data-ui-app=neto] .mc-close-btn{min-width:42px;min-height:42px}
+html[data-ui-app=neto] .mc-form-field:focus-within label{color:var(--ui-accent)}
+
+@media(hover:hover) and (pointer:fine){
+ html[data-ui-app] .ui-surface:hover{border-color:color-mix(in srgb,var(--ui-accent) 28%,var(--ui-line));box-shadow:var(--ui-shadow)}
+ html[data-ui-app] .ui-lift:hover{translate:0 -3px}
+ html[data-ui-app] .ui-row:hover{background-color:color-mix(in srgb,var(--ui-accent) 5%,transparent)}
+ html[data-ui-app] .ui-tabs :is(button,a):not(:disabled):hover{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ui-accent) 24%,transparent)}
+ html[data-ui-app=radar] .topic-tile:hover .tile-arrow{translate:4px -3px}
+ html[data-ui-app=radar] .story-title:hover{color:var(--blue)}
+ html[data-ui-app=gasoya] .star-btn:hover{scale:1.08}
+ html[data-ui-app=luzya] :is(.bar,.hist-bar):hover{filter:brightness(1.12)}
+ html[data-ui-app=condufy] .node.clickable:hover .n-ic{scale:1.06}
+ html[data-ui-app=condufy] .node.clickable:hover .chev{translate:3px 0}
+}
+@media(max-width:760px){
+ html[data-ui-app=pulso] .mobile-tabs{border-top-color:color-mix(in srgb,var(--mint) 22%,var(--line));box-shadow:0 -10px 26px -20px #0008}
+ html[data-ui-app=pulso] .mobile-tabs button{border-radius:13px;min-height:44px}
+ html[data-ui-app=pulso] .mobile-tabs button.active{background:color-mix(in srgb,var(--mint) 9%,transparent)}
+ html[data-ui-app=pulso] .page-title{font-size:36px}
+ html[data-ui-app=pulso] .idea-card{padding:20px}
+ html[data-ui-app=radar] .featured{padding:23px 22px}
+ html[data-ui-app=radar] .bottom-nav .bottom-item{min-height:45px;border-radius:14px}
+ html[data-ui-app=radar] .bottom-nav .bottom-item.is-active{box-shadow:inset 0 1px color-mix(in srgb,var(--blue) 16%,transparent)}
+ html[data-ui-app=radar] .topic-tile{padding:17px;min-height:145px}
+ html[data-ui-app=radar] .topic-tile strong{font-size:24px}
+ html[data-ui-app=panel] .fichas{gap:12px}
+ html[data-ui-app=panel] .titulo-seccion{font-size:20px}
+ html[data-ui-app=ayudaya] :is(.card,.how-card){padding:22px}
+ html[data-ui-app=ayudaya] .stats .stat{min-width:0;flex:1;padding:17px}
+ html[data-ui-app=gasoya] .tabbar-inner,html[data-ui-app=luzya] .tabbar-inner{border-radius:26px;box-shadow:inset 0 1px #ffffff10,0 12px 30px #0003}
+ html[data-ui-app=gasoya] .tab-item,html[data-ui-app=luzya] .tab-item{min-height:48px;border-radius:18px}
+ html[data-ui-app=gasoya] .card{padding:16px}
+ html[data-ui-app=luzya] .hero .price{font-size:48px}
+}
+@keyframes ui-arrive{from{opacity:.85;translate:0 7px}to{opacity:1;translate:0 0}}
+@keyframes ui-sheet{from{opacity:.5;translate:0 14px}to{opacity:1;translate:0 0}}
+@keyframes ui-working{50%{opacity:.72}}
+@media(prefers-reduced-motion:reduce){html[data-ui-app] .ui-arrive,html[data-ui-app] .ui-sheet,html[data-ui-app] button[aria-busy=true]{animation:none!important}html[data-ui-app] :is(.ui-surface,.ui-row,button,a,input,select,textarea,summary,[role=button]){transition:none!important;scale:none!important;translate:none!important}}
+@media print{html[data-ui-app] .ui-arrive,html[data-ui-app] .ui-sheet{animation:none!important;translate:none!important;opacity:1!important}}
